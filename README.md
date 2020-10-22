@@ -1,8 +1,8 @@
-# ディレクトリはこんな感じで作ろう
+### ディレクトリはこんな感じで作ろう
 
 myApp  
 ├ README.md  
-├ dockerfile  
+├ Dockerfile  
 ├ docker-compose.yml  
 └ src  
 &emsp; ├ web   
