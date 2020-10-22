@@ -1,0 +1,40 @@
+version: "3"
+services:
+   # apiとしてのコンテナ
+   api:
+       # Dockerイメージを指定、こっちはDockerfileからビルドした方を使うのでビルドする
+       build: .
+       # 文字通り、コンテナに名前つける
+       container_name: flask_api
+       # このサービスが公開するポート。"ホスト側のポート番号:コンテナ内のポート番号"
+       ports:
+       - "5000:5000"
+       # ディレクトリをマウントする。"ホスト側のパス:コンテナ側のパス"
+       # 共有フォルダみたいに使える
+       volumes:
+       - "./src/web:/src/web"
+       - "./src/backend:/src/backend"
+       - "./src/train:/src/train"
+       # これで起動しても落ちなくなるおまじない
+       tty: true
+   # DBサーバーとしてのコンテナ
+   mysql:
+       # こっちのイメージはmysql、事前にDockerHubからpullしておく必要とかはない
+       image: mysql:8.0
+       container_name: mysql_container
+       ports:
+       - "3306:3306"
+       volumes:
+       # /docker-entrypoint-initdb.dに.sqlや.shを配置すると初めに自動的に実行されるらしいぞ
+       - "./src/mysql/init:/docker-entrypoint-initdb.d"
+       # /var/lib/mysqlにはDBの情報あるらしく、それをホスト側に保存することでコンテナ閉じてもDBを復元できる
+       - "./src/mysql/data:/var/lib/mysql"
+       # MySQLの「InnoDB」の「非同期ディスク I/O」とかいう機能がDocker Toolboxでは使えないらしい
+       # そのため、有効化しているとエラーが出るので無効化する必要がある
+       command: --innodb-use-native-aio=0
+       # 環境変数
+       environment:
+           MYSQL_ROOT_PASSWORD: root
+           MYSQL_DATABASE: mysql_database
+           MYSQL_USER: docker
+           MYSQL_PASSWORD: docker
