@@ -32,5 +32,8 @@ RUN conda config --append channels conda-forge && \
 # 作業ディレクトリの指定
 WORKDIR /root
 
+# flask run -h '0.0.0.0'でサーバ建つようにする
+ENV FLASK_APP /src/backend/api/app.py
+
 # コンテナの実行コマンド
 CMD ["/bin/bash"]
