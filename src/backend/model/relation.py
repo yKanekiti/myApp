@@ -1,6 +1,8 @@
-from ..common.database import db
-from ..common.config import Config
-from glob import glob
+import sys
+sys.path.append("src/backend/")
+
+from common.database import db, ma, desc
+from common.config import Config
 
 
 class Relation(db.Model):

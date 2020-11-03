@@ -1,5 +1,8 @@
-from ..common.database import db, ma, desc
-from ..common.config import Config
+import sys
+sys.path.append("src/backend/")
+
+from common.database import db, ma, desc
+from common.config import Config
 from glob import glob
 from .relation import Relation
 
@@ -44,8 +47,8 @@ class Node(db.Model):
         return glob(file_path, recursive=True)
 
     # 学習モデルの保存先
-    def get_learning_model(self):
-        return '../train/model/' + self.get_file_path() + '/**'
+    def get_learning_model_path(self):
+        return '../train/model/' + self.get_file_path()
 
     # ノードが葉かどうか判定
     def is_leaf(self):
