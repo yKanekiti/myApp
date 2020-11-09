@@ -20,7 +20,7 @@ services:
    # DBサーバーとしてのコンテナ
    mysql:
        # こっちのイメージはmysql、事前にDockerHubからpullしておく必要とかはない
-       image: mysql:8.0
+       build: src/mysql/
        container_name: mysql_container
        ports:
        - "3306:3306"
@@ -29,12 +29,20 @@ services:
        - "./src/mysql/init:/docker-entrypoint-initdb.d"
        # /var/lib/mysqlにはDBの情報あるらしく、それをホスト側に保存することでコンテナ閉じてもDBを復元できる
        - "./src/mysql/data:/var/lib/mysql"
+       - "./src/mysql/my.cnf:/etc/mysql/conf.d/my.cnf"
        # MySQLの「InnoDB」の「非同期ディスク I/O」とかいう機能がDocker Toolboxでは使えないらしい
        # そのため、有効化しているとエラーが出るので無効化する必要がある
-       command: --innodb-use-native-aio=0
+       # docker Desktop for Windowsだと消す必要はない
+       # command: --innodb-use-native-aio=0
+
        # 環境変数
        environment:
+           locale-gen: ja_JP.UTF-8
+           LANG: ja_JP.UTF-8
+           LANGUAGE: ja_JP:en
            MYSQL_ROOT_PASSWORD: root
            MYSQL_DATABASE: mysql_database
            MYSQL_USER: docker
            MYSQL_PASSWORD: docker
+
+       tty: true

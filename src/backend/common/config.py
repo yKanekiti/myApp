@@ -5,7 +5,7 @@ class SystemConfig:
         'user': 'root',
         'password': 'root',
         'host': 'localhost:3306',
-        'db_name': 'my_mysql'
+        'db_name': 'mysql_database'
     })
 
 

@@ -27,7 +27,7 @@ def get_images(node):
             image = load_img(image_path, grayscale=False, target_size=(INPUT_SIZE, INPUT_SIZE))
             image = img_to_array(image) / 255
             train_images.append(image)
-            train_labels.append(child_node.id)
+            train_labels.append(label)
     return train_images, train_labels
 
 

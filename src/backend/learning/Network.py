@@ -17,7 +17,7 @@ class Network:
     def create_model(self):
         model = models.Sequential()
 
-        model.add(layers.Reshape((self.input_size, self.input_size, 3), input_shape=(INPUT_SIZE * INPUT_SIZE,),
+        model.add(layers.Reshape((self.input_size, self.input_size, 3), input_shape=(self.input_size * self.input_size,),
                                  name='reshape'))
 
         model.add(layers.Conv2D(NUMBER_OF_FILTER_01, (PADDING_SIZE_01, PADDING_SIZE_01), padding='same',
