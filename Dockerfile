@@ -23,7 +23,7 @@ ENV PATH $PATH:/root/anaconda3/bin
 RUN conda update conda
 
 # 各フレームワークをインストール
-RUN conda install -c anaconda Flask TensorFlow Keras
+RUN conda install -c anaconda Flask TensorFlow Keras mysqlclient pyMySQL marshmallow-sqlalchemy
 
 RUN conda config --append channels conda-forge && \
 	conda install -c conda-forge flask-sqlalchemy && \

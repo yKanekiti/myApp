@@ -3,6 +3,7 @@ import numpy as np
 from keras.preprocessing.image import load_img, img_to_array, ImageDataGenerator
 from learning.Network import Network
 from sklearn.model_selection import train_test_split
+from pprint import pprint
 
 INPUT_SIZE = 200
 BATCH_SIZE = 32
@@ -19,10 +20,21 @@ def get_images(node):
     """
     train_images = []
     train_labels = []
-    for child_node in node.get_children():
+    children_node_list = node.get_children()
+
+    pprint("@@@@@@@@@@@@@@@@@@@@@")
+    print(node.name)
+    pprint("@@@@@@@@@@@@@@@@@@@@@")
+
+    for child_node in children_node_list:
+        pprint("@@@@@@@@@@@@@@@@@@@@@")
+        print(child_node.name)
+        pprint("@@@@@@@@@@@@@@@@@@@@@")
         image_path_list = child_node.get_images()
         # 1つ1つの画像パスについて、まずnumpyにして加工してく
         label = child_node.id
+        pprint("label:")
+        pprint(label)
         for image_path in image_path_list:
             image = load_img(image_path, grayscale=False, target_size=(INPUT_SIZE, INPUT_SIZE))
             image = img_to_array(image) / 255
@@ -62,6 +74,10 @@ class Learning:
         train_images, train_labels = get_images(node)
         train_images, test_images, train_labels, test_labels = train_test_split(train_images, train_labels,
                                                                                 train_size=0.2)
+        pprint("-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-")
+        pprint(train_images[0])
+        pprint(train_labels[0])
+        pprint("-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-")
 
         # 水増し設定
         data_generator = ImageDataGenerator(
@@ -73,7 +89,7 @@ class Learning:
             shear_range=3,
             fill_mode="nearest")
 
-        network = Network(INPUT_SIZE, len(node.get_children))
+        network = Network(INPUT_SIZE, node.get_number_of_children())
         model = network.create_model()
         model.summary()
 

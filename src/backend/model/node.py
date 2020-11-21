@@ -1,8 +1,8 @@
-import sys
+import sys, os
+
 sys.path.append("src/backend/")
 
-from common.database import db, ma, desc
-from common.config import Config
+from common.database import db, ma, desc, Config
 from glob import glob
 from .relation import Relation
 
@@ -11,21 +11,31 @@ from .relation import Relation
 def get_learning_targets():
     node_list = []
     # ここ絶対もっとスーッといけるはず
-    for node in db.session.query(Node).all():
+    data_list = db.session.query(Node).all()
+    for node in data_list:
         if not node.is_leaf():
             node_list.append(node)
     return node_list
 
 
 class Node(db.Model):
+    __tablename__ = "node"
+    __table_args__ = ({"mysql_engine": "InnoDB"})
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(30), nullable=False)
+    dir_name = db.Column(db.String(30), nullable=False)
 
     # ノードの子供リスト取得
     def get_children(self):
-        children_path = db.session.query(Node).outerjoin(Relation, Node.id == Relation.id). \
+        children_node = db.session.query(Node).join(Relation, Node.id == Relation.id). \
             filter(Node.id == self.id, Relation.distance == 1).all()
-        return children_path
+        return children_node
+
+    # ノードの子供リストの要素数取得
+    def get_number_of_children(self):
+        count = db.session.query(Node).outerjoin(Relation, Node.id == Relation.id). \
+            filter(Node.id == self.id, Relation.distance == 1).count()
+        return count
 
     # ノードのパス（trainより後ろからの）
     def get_file_path(self):
@@ -42,21 +52,25 @@ class Node(db.Model):
     # ノードの下にあるイメージのパスを全取得
     def get_images(self):
         # まず相対パス作っとく
-        file_path = '../train/image/' + self.get_file_path() + '/**'
-        # glob関数でパスを全部とる\
-        return glob(file_path, recursive=True)
+        file_path = '/src/train/Images/' + self.get_file_path() + '/**'
+        # glob関数でパスを全て取得。このままではフォルダも含まれてしまう（/src/train/Images/root/ みたいな）
+        file_path_list = glob(file_path, recursive=True)
+        # ファイルのみに絞るフィルターをかける
+        return filter(lambda path: os.path.isfile(path), file_path_list)
 
     # 学習モデルの保存先
     def get_learning_model_path(self):
-        return '../train/model/' + self.get_file_path()
+        return '/src/train/Model/' + self.get_file_path()
 
     # ノードが葉かどうか判定
     def is_leaf(self):
         return db.session.query(Relation.id).filter(id != self.id) is None
 
 
+"""
 # EntityをJsonに変換
 class NodeSchema(ma.ModelSchema):
     class Meta:
         model = Node
         fields = ('id', 'name')
+"""
