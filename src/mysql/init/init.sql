@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS mysql_database.node(
 
 INSERT INTO mysql_database.node(dir_name, name) VALUES
     ('root', 'ルート'),
-	('Mobile Suit', 'モビルスーツ'),
+	('MobileSuit', 'モビルスーツ'),
 	('Sanrio', 'サンリオ'),
 	('Gundam', 'ガンダム'),
 	('Dom', 'ドム'),

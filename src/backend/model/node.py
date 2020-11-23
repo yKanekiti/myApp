@@ -5,6 +5,7 @@ sys.path.append("src/backend/")
 from common.database import db, ma, desc, Config
 from glob import glob
 from .relation import Relation
+from pprint import pprint
 
 
 # 学習対象ノードの取得は別にstaticでもいいな
@@ -27,15 +28,11 @@ class Node(db.Model):
 
     # ノードの子供リスト取得
     def get_children(self):
-        children_node = db.session.query(Node).join(Relation, Node.id == Relation.id). \
-            filter(Node.id == self.id, Relation.distance == 1).all()
+        id_list = db.session.query(Relation.child_id). \
+            filter(Relation.id == self.id, Relation.distance == 1).all()
+        children_node = db.session.query(Node). \
+            filter(Node.id.in_(id_list)).all()
         return children_node
-
-    # ノードの子供リストの要素数取得
-    def get_number_of_children(self):
-        count = db.session.query(Node).outerjoin(Relation, Node.id == Relation.id). \
-            filter(Node.id == self.id, Relation.distance == 1).count()
-        return count
 
     # ノードのパス（trainより後ろからの）
     def get_file_path(self):
@@ -64,7 +61,7 @@ class Node(db.Model):
 
     # ノードが葉かどうか判定
     def is_leaf(self):
-        return db.session.query(Relation.id).filter(id != self.id) is None
+        return db.session.query(Relation).filter(Relation.id == self.id).count() == 1
 
 
 """

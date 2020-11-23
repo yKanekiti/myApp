@@ -4,10 +4,11 @@ from keras.preprocessing.image import load_img, img_to_array, ImageDataGenerator
 from learning.Network import Network
 from sklearn.model_selection import train_test_split
 from pprint import pprint
+from keras.utils import to_categorical
 
 INPUT_SIZE = 200
 BATCH_SIZE = 32
-EPOCH = 80
+EPOCH = 8
 
 
 def get_images(node):
@@ -22,25 +23,27 @@ def get_images(node):
     train_labels = []
     children_node_list = node.get_children()
 
-    pprint("@@@@@@@@@@@@@@@@@@@@@")
-    print(node.name)
-    pprint("@@@@@@@@@@@@@@@@@@@@@")
-
+    pprint("==.==.==.==.==.==.==.==.==.==.==.==.==.==.==")
+    print("親ノード：", node.name)
+    pprint("==.==.==.==.==.==.==.==.==.==.==.==.==.==.==")
+    label = 0
     for child_node in children_node_list:
-        pprint("@@@@@@@@@@@@@@@@@@@@@")
-        print(child_node.name)
-        pprint("@@@@@@@@@@@@@@@@@@@@@")
+        pprint("==.==.==.==.==.==.==.==.==.==")
+        print("子ノード：", child_node.name)
+        pprint("==.==.==.==.==.==.==.==.==.==")
         image_path_list = child_node.get_images()
         # 1つ1つの画像パスについて、まずnumpyにして加工してく
-        label = child_node.id
-        pprint("label:")
-        pprint(label)
+
         for image_path in image_path_list:
             image = load_img(image_path, grayscale=False, target_size=(INPUT_SIZE, INPUT_SIZE))
             image = img_to_array(image) / 255
             train_images.append(image)
             train_labels.append(label)
-    return train_images, train_labels
+        label += 1
+
+    train_images = np.array(train_images)
+    train_labels = np.array(train_labels)
+    return train_images, train_labels, label
 
 
 class Learning:
@@ -71,13 +74,8 @@ class Learning:
         """
 
         # データ取得
-        train_images, train_labels = get_images(node)
-        train_images, test_images, train_labels, test_labels = train_test_split(train_images, train_labels,
-                                                                                train_size=0.2)
-        pprint("-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-")
-        pprint(train_images[0])
-        pprint(train_labels[0])
-        pprint("-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-")
+        train_images, train_labels, output_size = get_images(node)
+        train_labels = to_categorical(train_labels)
 
         # 水増し設定
         data_generator = ImageDataGenerator(
@@ -87,18 +85,19 @@ class Learning:
             zoom_range=[0.7, 1.3],
             channel_shift_range=20,
             shear_range=3,
-            fill_mode="nearest")
-
-        network = Network(INPUT_SIZE, node.get_number_of_children())
+            fill_mode="nearest",
+            validation_split=0.2)
+        network = Network(INPUT_SIZE, output_size)
         model = network.create_model()
-        model.summary()
+        model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
         print("- 学習開始（各ノード） -")
+        print("train_images.shape =", train_images.shape)
+        print("train_labels.shape =", train_labels.shape)
 
-        model.fit_generator(
-            data_generator.flow(train_images, train_labels, batch_size=BATCH_SIZE),
-            validation_data=(test_images, test_labels),
-            epochs=EPOCH)
+        model.fit(data_generator.flow(train_images, train_labels, batch_size=BATCH_SIZE),
+                  steps_per_epoch=len(train_images) / BATCH_SIZE, epochs=EPOCH)
+
         model.save(node.get_learning_model_path())
 
-        print("- 学習終了（各ノード） -")
+    print("- 学習終了（各ノード） -")

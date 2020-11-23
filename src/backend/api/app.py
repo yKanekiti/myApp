@@ -21,6 +21,7 @@ def index():
 @app.route('/learn')
 def learn():
     main()
+    return "fin"
 
 
 if __name__ == '__main__':
