@@ -1,6 +1,6 @@
 version: "3"
 services:
-   # apiとしてのコンテナ
+   # APIコンテナ
    api:
        # Dockerイメージを指定、こっちはDockerfileからビルドした方を使うのでビルドする
        build: .
@@ -21,7 +21,8 @@ services:
        tty: true
        depends_on:
            -   mysql
-   # DBサーバーとしてのコンテナ
+           -   web
+   # DBコンテナ
    mysql:
        # こっちのイメージはmysql、事前にDockerHubからpullしておく必要とかはない
        build: src/mysql/
@@ -47,4 +48,13 @@ services:
            MYSQL_DATABASE: mysql_database
            MYSQL_USER: docker
            MYSQL_PASSWORD: docker
+       tty: true
+   # webコンテナ
+   web:
+       build: src/web/
+       container_name: vue
+       volumes:
+       - "./src/web:/src/"
+       ports:
+       - "8080:8080"
        tty: true

@@ -5,10 +5,8 @@ sys.path.append("src/backend/")
 from common.database import db, ma, desc, Config
 from glob import glob
 from .relation import Relation
-from pprint import pprint
 
 
-# 学習対象ノードの取得は別にstaticでもいいな
 def get_learning_targets():
     node_list = []
     # ここ絶対もっとスーッといけるはず
@@ -17,6 +15,10 @@ def get_learning_targets():
         if not node.is_leaf():
             node_list.append(node)
     return node_list
+
+
+def get_node(node_id):
+    return db.session.query(Node).filter(id == node_id).one()
 
 
 class Node(db.Model):

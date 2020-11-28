@@ -1,4 +1,5 @@
 from tensorflow.keras import layers, models, initializers
+from tensorflow.keras.models import load_model
 
 NUMBER_OF_FILTER_01 = 36
 PADDING_SIZE_01 = 3
@@ -7,6 +8,16 @@ NUMBER_OF_FILTER_02 = 36
 PADDING_SIZE_02 = 3
 POOLING_SIZE_02 = 2
 HIDDEN_SIZE = 1028
+
+
+def load_created_model(node):
+    """
+    ノードの学習済モデルを取得する
+    :param node:
+    :return:
+    """
+    file_path = node.get_learning_model_path()
+    return load_model(file_path)
 
 
 class Network:

@@ -1,15 +1,3 @@
-
-
---ALTER USER root IDENTIFIED WITH mysql_native_password;
---UPDATE USER SET authentication_string=PASSWORD("") WHERE USER='root';
-
---CREATE USER 'docker'@'%' IDENTIFIED BY 'docker';
---ALTER USER docker IDENTIFIED WITH mysql_native_password;
-
-CREATE SCHEMA IF NOT EXISTS mysql_database;
-
-USE mysql_database;
-
 CREATE TABLE IF NOT EXISTS mysql_database.node(
     id INT(8) AUTO_INCREMENT,
     dir_name VARCHAR(100) NOT NULL,
