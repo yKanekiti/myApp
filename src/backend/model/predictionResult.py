@@ -5,6 +5,7 @@ from common.database import ma
 
 @dataclasses.dataclass
 class PredictionResult:
+    id: int
     name: str
     value: float
 
