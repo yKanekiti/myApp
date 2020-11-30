@@ -29,8 +29,9 @@ RUN conda config --append channels conda-forge && \
 	conda install -c conda-forge flask-sqlalchemy && \
 	conda install -c conda-forge flask-marshmallow
 
+RUN mkdir /tmp/image
 # 作業ディレクトリの指定
-WORKDIR /root
+WORKDIR /src
 
 # flask run -h '0.0.0.0'でサーバ建つようにする
 ENV FLASK_APP /src/backend/api/app.py
