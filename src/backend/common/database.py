@@ -20,8 +20,6 @@ class SystemConfig:
 Config = SystemConfig
 
 db = SQLAlchemy()
-ma = Marshmallow()
-
 
 # 初期設定
 def init_db():
@@ -33,4 +31,4 @@ def init_db():
     return app
 
 
-init_db()
+ma = Marshmallow(init_db())

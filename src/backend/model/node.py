@@ -18,7 +18,7 @@ def get_learning_targets():
 
 
 def get_node(node_id):
-    return db.session.query(Node).filter(id == node_id).one()
+    return db.session.query(Node).filter(Node.id == node_id).one()
 
 
 class Node(db.Model):
