@@ -1,13 +1,13 @@
 from tensorflow.keras import layers, models, initializers
 from tensorflow.keras.models import load_model
 
-NUMBER_OF_FILTER_01 = 36
+NUMBER_OF_FILTER_01 = 16
 PADDING_SIZE_01 = 3
 POOLING_SIZE_01 = 2
-NUMBER_OF_FILTER_02 = 36
+NUMBER_OF_FILTER_02 = 8
 PADDING_SIZE_02 = 3
 POOLING_SIZE_02 = 2
-HIDDEN_SIZE = 1028
+HIDDEN_SIZE = 128
 
 
 def load_created_model(node):

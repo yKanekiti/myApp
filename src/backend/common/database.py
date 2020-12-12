@@ -25,9 +25,9 @@ db = SQLAlchemy()
 def init_db():
     print("==.==.==.==.init_db.==.==.==.==")
     app = Flask(__name__, static_folder='../../web/static/', template_folder='../../web/templates/')
+    app.config.from_object(Config)
     db.init_app(app)
     app.app_context().push()
-    app.config.from_object(Config)
     return app
 
 

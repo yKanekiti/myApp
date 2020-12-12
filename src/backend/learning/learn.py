@@ -7,8 +7,8 @@ from pprint import pprint
 from keras.utils import to_categorical
 
 INPUT_SIZE = 200
-BATCH_SIZE = 32
-EPOCH = 8
+BATCH_SIZE = 128
+EPOCH = 256
 
 
 def get_images(node):
@@ -79,14 +79,14 @@ class Learning:
 
         # 水増し設定
         data_generator = ImageDataGenerator(
-            rotation_range=30,
-            width_shift_range=0.2,
-            height_shift_range=0.15,
-            zoom_range=[0.7, 1.3],
-            channel_shift_range=20,
+            rotation_range=20,
+            width_shift_range=0.15,
+            height_shift_range=0.10,
+            zoom_range=[0.8, 1.2],
+            channel_shift_range=15,
             shear_range=3,
             fill_mode="nearest",
-            validation_split=0.2)
+            validation_split=0.15)
         network = Network(INPUT_SIZE, output_size)
         model = network.create_model()
         model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
@@ -95,9 +95,9 @@ class Learning:
         print("train_images.shape =", train_images.shape)
         print("train_labels.shape =", train_labels.shape)
 
-        model.fit(data_generator.flow(train_images, train_labels, batch_size=BATCH_SIZE),
+        model.fit(data_generator.flow(train_images, train_labels, batch_size=BATCH_SIZE), shuffle=True,
                   steps_per_epoch=len(train_images) / BATCH_SIZE, epochs=EPOCH)
 
         model.save(node.get_learning_model_path())
 
-    print("- 学習終了（各ノード） -")
+        print("- 学習終了（各ノード） -")
