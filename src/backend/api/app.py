@@ -8,6 +8,7 @@ from common.database import init_db
 from main import main
 from learning.prediction import Prediction
 from keras.preprocessing.image import load_img, save_img, img_to_array
+from glob import glob
 
 app = init_db()
 app.register_blueprint(node_router)
@@ -28,11 +29,12 @@ def predict():
     # ノードがルートの場合、画像を一時フォルダに保存する
     if node_id == "1":
         image = request.files['image']
+        image_ext = '.' + image.mimetype.split('/')[-1]
         image = load_img(image, target_size=(INPUT_SIZE, INPUT_SIZE))
-        save_img("/tmp/image/" + file_name, image)
+        save_img("/tmp/image/" + file_name + image_ext, image)
     # 2回目からはimageはサーバにある前提で行く
     else:
-        image = load_img("/tmp/image/" + file_name)
+        image = load_img(glob("/tmp/image/" + file_name + ".*")[0])
 
     image = img_to_array(image) / 255
     return Prediction().predict(image, node_id, file_name)
