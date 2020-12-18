@@ -7,8 +7,8 @@ myApp/
 ├ .gitignore  
 └ src/  
 &emsp; ├ web/   
-&emsp;&ensp;|&emsp; ├ static/  
-&emsp;&ensp;|&emsp; └ templates/  
+&emsp;&ensp;|&emsp; ├ Dockerfile  
+&emsp;&ensp;|&emsp; └ frontend/  
 &emsp; ├ backend/  
 &emsp;&ensp;|&emsp; ├ api/  
 &emsp;&ensp;|&emsp; ├ common/  
