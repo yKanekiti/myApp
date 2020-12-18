@@ -2,3 +2,6 @@
 src/backend/api/__pycache__/
 src/mysql/data/
 src/train/image/
+src/web/frontend/dist/
+src/web/frontend/node_modules/
+

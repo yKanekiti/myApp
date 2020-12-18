@@ -54,7 +54,7 @@ services:
        build: src/web/
        container_name: vue
        volumes:
-       - "./src/web:/src/"
+       - "./src/web/frontend:/src/"
        ports:
        - "8080:8080"
        tty: true
