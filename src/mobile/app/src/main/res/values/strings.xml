@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">JudgeSGAndroid</string>
+    <string name="top_fragment">TopFragment</string>
+</resources>
