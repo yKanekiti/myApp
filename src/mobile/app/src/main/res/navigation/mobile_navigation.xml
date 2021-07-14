@@ -7,7 +7,17 @@
 
     <fragment
         android:id="@+id/TopFragment"
-        android:name="com.example.judgesgandroid.ui.main.TopFragment"
+        android:name="com.example.judgesgandroid.ui.TopFragment"
         android:label="top_fragment"
-        tools:layout="@layout/top_fragment" />
+        tools:layout="@layout/fragment_top">
+        <action
+            android:id="@+id/action_TopFragment_to_startFragment"
+            app:destination="@id/startFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/startFragment"
+        android:name="com.example.judgesgandroid.ui.StartFragment"
+        android:label="StartFragment"
+        tools:layout="@layout/fragment_start" />
+
 </navigation>

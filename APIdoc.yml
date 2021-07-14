@@ -1,0 +1,63 @@
+swagger: "2.0"
+
+info:
+  version: "1.0.0"
+  title: "API仕様"
+
+paths:
+  /predict:
+    post:
+      consumes: 
+      - "multipart/form-data"
+      summary: "判定結果取得API"
+      description: "画像認識の結果を取得する"
+      parameters:
+      - name: "image"
+        in: "body"
+        description: "判定ノードのIDと画像情報"
+        schema:
+          type: object
+          properties:
+            id:
+              type: "integer"
+              example: 1
+            name:
+              type: "string"
+              example: "batsumaru"
+      - in: formData
+        name: image
+        type: file
+        description: アップロードする画像ファイル
+      
+      responses:
+        200:
+          description: "成功時のレスポンス"
+          schema:
+            type: "object"
+            properties:
+              max_id:
+                type: "integer"
+                example: 3
+              result_list:
+                type: array
+                items:
+                  $ref: "#/definitions/result"
+
+definitions:
+  result:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        example: "2"
+      name:
+        type: "string"
+        example: "Gundam"
+      value:
+        type: "number"
+        format: "float"
+        example: 0.06555
+      is_leaf:
+        type: "integer"
+        example: 0
+
